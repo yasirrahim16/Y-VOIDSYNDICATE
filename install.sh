@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Y-VOIDSYNDICATE Auto-Installer
-# Written for Termux & Kali Linux
+# Updated to include PyPhisher
 
 echo "-----------------------------------"
 echo "Setting up Y-VOIDSYNDICATE..."
@@ -12,10 +12,10 @@ echo "[+] Updating Repositories..."
 pkg update && pkg upgrade -y
 
 # 2. Install Dependencies
-echo "[+] Installing PHP and Dependencies..."
-pkg install php git wget curl -y
+echo "[+] Installing PHP, Python, and Git..."
+pkg install php git wget curl python -y
 
-# 3. Check for Cloudflared (Tunneling)
+# 3. Setup Cloudflared
 if ! command -v cloudflared &> /dev/null
 then
     echo "[+] Installing Cloudflared..."
@@ -26,8 +26,20 @@ else
     echo "[+] Cloudflared is already installed."
 fi
 
+# 4. Setup PyPhisher
+echo "[+] Setting up PyPhisher..."
+if [ -d "PyPhisher" ]; then
+    echo "[!] PyPhisher already exists, skipping..."
+else
+    git clone https://github.com/KasRoudra/PyPhisher
+    cd PyPhisher
+    pip install -r requirements.txt
+    cd ..
+    echo "[+] PyPhisher installed successfully."
+fi
+
 echo "-----------------------------------"
 echo "Setup Complete!"
-echo "Run your tool using: php -S 127.0.0.1:8080"
+echo "Y-VOIDSYNDICATE is ready."
 echo "-----------------------------------"
 
